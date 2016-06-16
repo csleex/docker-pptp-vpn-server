@@ -19,6 +19,7 @@ script:
   - sudo docker run -d --privileged -p 1723:1723 -v /tmp/chap-secrets:/etc/ppp/chap-secrets $FULL_REPO
   - sleep 2
   - sudo netstat -tlpn
+  - sudo netstat -tlpn | grep -q 1723
 
 after_success:
   - docker login --email=$DOCKER_EMAIL --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
