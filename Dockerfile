@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER Przemek Szalko <przemek@mobtitude.com>
+MAINTAINER Sam Stoelinga <sammiestoel@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update &&\

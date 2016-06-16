@@ -1,6 +1,9 @@
-# VPN (PPTP) for Docker
+# PPTP VPN Server Docker Image
 
 This is a docker image with simple VPN (PPTP) server with _chap-secrets_ authentication.
+
+On Docker Hub Registry: [samos123/pptp-vpn-server](https://hub.docker.com/r/samos123/pptp-vpn-server/)  
+Source code on GitHub: [samos123/docker-pptp-vpn-server](https://github.com/samos123/docker-pptp-vpn-server)
 
 PPTP uses _/etc/ppp/chap-secrets_ file to authenticate VPN users.
 You need to create this file on your own and link it to docker when starting a container.
@@ -19,7 +22,7 @@ username    *           password    *
 To start VPN server as a docker container run:
 
 ````
-docker run -d --privileged -p 1723:1723 -v {local_path_to_chap_secrets}:/etc/ppp/chap-secrets mobtitude/vpn-pptp
+docker run -d --privileged -p 1723:1723 --net host -v {local_path_to_chap_secrets}:/etc/ppp/chap-secrets samos123/pptp-vpn-server
 ````
 
 Edit your local _chap-secrets_ file, to add or modify VPN users whenever you need.
@@ -30,20 +33,13 @@ You can use any VPN (PPTP) client to connect to the service.
 To authenticate use credentials provided in _chap-secrets_ file.
 
 
-## Troubleshooting 
-
-### Docker 1.7.x and connection issues
-After upgrading from Docker 1.3.0 to Docker 1.7.1 the containers started from image `mobtitude/vpn-pptp` stopped accepting connections to VPN without any reason.
-Connections were dropped after timeout. 
-
-It looked like Docker deamon didn't forward packets for GRE protocol to container.
-
-One of the possible solutions is to start container with networking mode set to host by adding param `--net=host` to run command:
-
-````
-docker run -d --privileged --net=host -v {local_path_to_chap_secrets}:/etc/ppp/chap-secrets mobtitude/vpn-pptp
-````
 
 **Note:** Before starting container in `--net=host` mode, please read how networking in `host` mode works in Docker:
 https://docs.docker.com/reference/run/#mode-host
 
+
+## Credits and Authors
+
+Original Author of the image is [Przemek Szalko](https://github.com/mobtitude/docker-vpn-pptp)
+
+Minor modifications and maintenance of this image by Sam Stoelinga
