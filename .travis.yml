@@ -1,0 +1,25 @@
+sudo: required
+
+env:
+  - REPO_NAME=samos123/pptp-vpn-server
+
+services:
+  - docker
+
+script:
+  - if [[ $TRAVIS_BRANCH = master ]]; then
+        export FULL_REPO=$REPO_NAME:latest;
+        docker build -t $FULL_REPO .;
+    else
+        export FULL_REPO=$REPO_NAME:$TRAVIS_BRANCH;
+        docker build -t $FULL_REPO .;
+    fi
+  - echo $FULL_REPO
+  - echo sam * testpaa  * > /tmp/chap-secrets
+  - sudo docker run -d --privileged -p 1723:1723 -v /tmp/chap-secrets:/etc/ppp/chap-secrets $FULL_REPO
+  - sleep 2
+  - sudo netstat -tlpn
+
+after_success:
+  - docker login --email=$DOCKER_EMAIL --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
+  - docker push $FULL_REPO
